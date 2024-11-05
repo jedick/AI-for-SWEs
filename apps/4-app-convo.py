@@ -1,9 +1,9 @@
-import os
 import gradio as gr
-from llama_index.core import VectorStoreIndex, Document
+from llama_index.core import VectorStoreIndex, Document, Settings
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.embeddings.openai import OpenAIEmbedding
 import fitz  # PyMuPDF
 
 # Function to extract text from the PDF
@@ -20,10 +20,7 @@ def process_pdf(pdf_file_bytes):
     extracted_text = extract_text_from_pdf(pdf_file_bytes)
     document = Document(text=extracted_text)
 
-    # Specify a Hugging Face model for local embeddings
-    embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
-
-    index = VectorStoreIndex.from_documents([document], embed_model=embed_model)
+    index = VectorStoreIndex.from_documents([document])
     return index
 
 # Function to handle conversation, with option for model choice
@@ -36,15 +33,17 @@ def query_pdf(pdf, query, history, model_choice):
     try:
         # Choose between local (Ollama) or OpenAI model
         if model_choice == "Local (Ollama)":
-            llm = Ollama(model="llama2", request_timeout=60.0)
+            # Use Ollama and local embedding model
+            Settings.llm = Ollama(model="llama2", request_timeout=60.0)
+            Settings.embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
         elif model_choice == "OpenAI":
-            # Use OpenAI's model and access the API key from the environment variable
-            openai_api_key = os.getenv("OPENAI_API_KEY")
-            llm = OpenAI(api_key=openai_api_key, model="gpt-3.5-turbo")
+            # Use OpenAI's LLM and embedding model
+            Settings.llm = OpenAI(model="gpt-3.5-turbo")
+            Settings.embed_model = OpenAIEmbedding()
 
         # Process the PDF and set up the query engine
         index = process_pdf(pdf)
-        query_engine = index.as_query_engine(llm=llm)
+        query_engine = index.as_query_engine()
 
         # Add previous conversation to the query for context
         conversation = "\n".join([f"User: {h[0]}\nAssistant: {h[1]}" for h in history])
