@@ -1,3 +1,16 @@
+### Intro to Jeff's fork
+
+This is my fork of an awesome workshop repository started by @hugobowne. I'm using it to flex my Python muscles and get a leg up on building generative AI apps.
+
+Summary of the changes I've made:
+
+- The conversation app (`4-app-convo.py`) uses OpenAIEmbedding instead of a local embedding model if the OpenAI option is selected. The imports of Ollama and HuggingFaceEmbedding are made conditional in case a local model isn't available. This situation is indicated in the app by a message, and the radio selector is limited to only OpenAI.
+- The apps use `llama_index.core.Settings` to specify the models. If OpenAI is selected, the LLM and embedding models are `gpt-4o-mini` and `text-embedding-3-small`, respectively. The local model (Ollama) uses `llama3.2`.
+
+The original description is below!
+
+___
+
 This repo is a WIP. We'll teach our first iteration of this workshop in Nov 2024 at the [MLOps World and Generative AI World Conference](https://generative-ai-summit.com/).
 
 ## Description:
