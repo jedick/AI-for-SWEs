@@ -1,11 +1,36 @@
 ### Intro to Jeff's fork
 
-This is my fork of an awesome workshop repository started by @hugobowne. I'm using it to flex my Python muscles and get a leg up on building generative AI apps.
+This is my fork of an awesome workshop repository for building generative AI apps started by [@hugobowne](https://github.com/hugobowne).
+I've made the apps more robust to local model availability and made the conversation logs more comprehensive (input file and model used and time taken for the query).
 
 Summary of the changes I've made:
 
-- The conversation app (`4-app-convo.py`) uses OpenAIEmbedding instead of a local embedding model if the OpenAI option is selected. The imports of Ollama and HuggingFaceEmbedding are made conditional in case a local model isn't available. This situation is indicated in the app by a message, and the radio selector is limited to only OpenAI.
-- The apps use `llama_index.core.Settings` to specify the models. If OpenAI is selected, the LLM and embedding models are `gpt-4o-mini` and `text-embedding-3-small`, respectively. The local model (Ollama) uses `llama3.2`.
+- The conversation app (`4-app-convo.py`) uses OpenAIEmbedding instead of a local embedding model if the OpenAI option is selected.
+  The imports of Ollama and HuggingFaceEmbedding are made conditional in case a local model isn't available.
+  This situation is indicated in the app by a message, and the radio selector is limited to only OpenAI.
+- The logging app (`5-app-convo-log.py`) logs the PDF file name and LLM name.
+  The user's query is logged before running the query so that model timing can be calculated from the logs.
+- The apps use `llama_index.core.Settings` to specify the models.
+  If OpenAI is selected, the LLM and embedding models are `gpt-4o-mini` and `text-embedding-3-small`, respectively.
+  The local model (Ollama) is `llama3.2`.
+
+Requirements cheatsheet:
+
+```
+# For 1-app-query.py
+pip install llama-index
+# For 2-app-front-end.py
+pip install gradio
+pip install PyMuPDF
+# For 3-app-local.py
+pip install llama-index-llms-ollama
+pip install llama-index-embeddings-huggingface
+curl -fsSL https://ollama.com/install.sh | sh # Run as root
+ollama serve         # Do this before running the app
+ollama run llama3.2  # Only needed once to download the model
+# To explore the SQLite database created in 5-app-convo-log.py
+pip install datasette
+```
 
 The original description is below!
 

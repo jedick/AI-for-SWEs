@@ -1,18 +1,12 @@
 import gradio as gr
 from llama_index.core import VectorStoreIndex, Document, Settings
-
-# These come with pip install llama-index, so no try blocks are needed here
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 
 local_ok = True
-# These require pip install llama-index-llms-ollama and pip install llama-index-embeddings-huggingface, so we put them in try blocks
+# The try block lets this app work without installing a local model
 try:
     from llama_index.llms.ollama import Ollama
-except ImportError:
-    local_ok = False
-
-try:
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 except ImportError:
     local_ok = False
