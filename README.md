@@ -1,7 +1,7 @@
 ### Intro to Jeff's fork
 
 This is my fork of an awesome workshop repository for building generative AI apps started by [@hugobowne](https://github.com/hugobowne).
-I've made the apps more robust to local model availability and made the conversation logs more comprehensive (input file and model used and time taken for the query).
+The changes here make the apps more robust to unavailable local models, the conversation logs more comprehensive, and the interface more interactive and future-proof.
 
 Summary of the changes I've made:
 
@@ -10,9 +10,13 @@ Summary of the changes I've made:
   This situation is indicated in the app by a message, and the radio selector is limited to only OpenAI.
 - The logging app (`5-app-convo-log.py`) logs the PDF file name and LLM name.
   The user's query is logged before running the query so that model timing can be calculated from the logs.
+- The feedback app (`6-app-rate-answer.py`) incorporates the above changes.
+- A new app (`7-app-enter-to-submit.py`) puts the query form below the conversation, [allows using "Enter" to submit the query](https://www.gradio.app/guides/blocks-and-event-listeners#binding-multiple-triggers-to-a-function), and avoids a [deprecated `tuples` parameter value](https://www.gradio.app/docs/gradio/chatbot#behavior) in the chatbot code that produces a warning.[^1]
 - The apps use `llama_index.core.Settings` to specify the models.
   If OpenAI is selected, the LLM and embedding models are `gpt-4o-mini` and `text-embedding-3-small`, respectively.
   The local model (Ollama) is `llama3.2`.
+
+[^1]: UserWarning: You have not specified a value for the `type` parameter. Defaulting to the 'tuples' format for chatbot messages, but this is deprecated and will be removed in a future version of Gradio. Please set type='messages' instead, which uses openai-style 'role' and 'content' keys.
 
 Requirements cheatsheet:
 
